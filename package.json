@@ -1,0 +1,26 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexandrNistratov/movies-explorer-api.git"
+  },
+  "author": "Alexandr Nistratov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexandrNistratov/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/AlexandrNistratov/movies-explorer-api#readme",
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.7"
+  }
+}
