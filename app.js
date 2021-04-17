@@ -16,7 +16,7 @@ const { PORT = 3000 } = process.env;
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useNewUrlParser: true,
   useCreateIndex: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 });
 
 app.use(bodyParser.json());
@@ -42,5 +42,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Сервер работает')
+  console.log('Сервер работает');
 });

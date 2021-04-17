@@ -4,16 +4,16 @@ const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
-//Сохраненные фильмы
+// Сохраненные фильмы
 const getSavedMovies = (req, res, next) => {
   const owner = req.user._id;
 
-  Movies.find({owner})
+  Movies.find({ owner })
     .then((movie) => res.status(200).send(movie))
-    .catch(next)
-}
+    .catch(next);
+};
 
-//Создать фильм
+// Создать фильм
 const createMovies = (req, res, next) => {
   Movies.create({ ...req.body, owner: req.user._id })
     .then((movie) => res.status(200).send(movie))
@@ -23,9 +23,9 @@ const createMovies = (req, res, next) => {
       }
       next(err);
     });
-}
+};
 
-//Удалить фильм
+// Удалить фильм
 const deleteMovies = (req, res, next) => {
   const owner = req.user._id;
 

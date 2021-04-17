@@ -1,6 +1,6 @@
-const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
@@ -42,23 +42,23 @@ const setProfileUser = (req, res, next) => {
       }
       next(err);
     });
-}
+};
 
 const register = (req, res, next) => {
-  const {email, password, name} = req.body;
+  const { email, password, name } = req.body;
 
   if (!email || !password) {
     throw new NotFoundError('Не передан емейл или пароль');
   }
 
   bcrypt.hash(password, SALT_ROUNDS)
-    .then((hash) => User.create({email, password: hash, name}))
+    .then((hash) => User.create({ email, password: hash, name }))
     .then((user) => {
       res.status(200).send({
         email: user.email,
         _id: user._id,
-        name: user.name
-      })
+        name: user.name,
+      });
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
@@ -74,25 +74,26 @@ const register = (req, res, next) => {
     });
 };
 
-  const login = (req, res, next) => {
-    const { email, password } = req.body;
+const login = (req, res, next) => {
+  const { email, password } = req.body;
 
-    return User.findUserByCredentials(email, password)
-      .then((user) => {
-        const token = jwt.sign(
-          { _id: user._id },
-          'some-secret-key',
-          { expiresIn: '7d' },
-        );
-        res.send({ token, email: user.email });
-      })
-      .catch((err) => {
-        if (err.name === 'ValidationError') {
-          next(new BadRequestError('Некорректные данные'));
-        }
-        next(err);
-      });
-  };
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        'some-secret-key',
+        { expiresIn: '7d' },
+      );
+      res.send({ token, email: user.email });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Некорректные данные'));
+      }
+      next(err);
+    });
+};
 
-
-module.exports = { getProfileUser, setProfileUser, register, login };
+module.exports = {
+  getProfileUser, setProfileUser, register, login,
+};
