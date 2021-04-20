@@ -28,7 +28,7 @@ const movieSchema = new mongoose.Schema({
   },
   trailer: {
     type: String,
-    // required: true,
+    required: true,
     validate: {
       validator: (v) => isURL(v),
       message: 'Неправильный формат ссылки',
@@ -49,11 +49,11 @@ const movieSchema = new mongoose.Schema({
   },
   movieId: {
     type: mongoose.Schema.Types.ObjectId,
-    // required: true,
+    required: true,
   },
   nameRU: {
     type: String,
-    // required: true,
+    required: true,
   },
   nameEn: {
     type: String,
