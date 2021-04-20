@@ -40,6 +40,9 @@ const setProfileUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
       }
+      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+        next(new ConflictError('Такой пользователь уже существует'));
+      }
       next(err);
     });
 };
