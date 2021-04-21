@@ -26,14 +26,13 @@ const getProfileUser = (req, res, next) => {
 
 const setProfileUser = (req, res, next) => {
   const { name, email } = req.body;
+
   User.findByIdAndUpdate(req.user._id, { name, email }, { runValidators: true, new: true }).orFail(new Error('Пользователь не найден'))
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.status(200).send({
-        email: user.email
-      });
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
