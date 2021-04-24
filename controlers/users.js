@@ -1,9 +1,12 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+require('dotenv').config();
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const SALT_ROUNDS = 10;
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
@@ -18,16 +21,16 @@ const getProfileUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       }
-      next(err);
+      return next(err);
     });
 };
 
 const setProfileUser = (req, res, next) => {
   const { name, email } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, email }, { runValidators: true, new: true }).orFail(new Error('Пользователь не найден'))
+  User.findByIdAndUpdate(req.user._id, { name, email }, { runValidators: true, new: true }).orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
@@ -41,10 +44,10 @@ const setProfileUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
       }
-      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        next(new ConflictError('Такой пользователь уже существует'));
+      if (err.code === MONGO_DUPLICATE_ERROR_CODE && err.codeName === 'DuplicateKey') {
+        return next(new ConflictError('Такой пользователь уже существует'));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -52,7 +55,7 @@ const register = (req, res, next) => {
   const { email, password, name } = req.body;
 
   if (!email || !password) {
-    throw new NotFoundError('Не передан емейл или пароль');
+    throw new BadRequestError('Не передан емейл или пароль');
   }
 
   bcrypt.hash(password, SALT_ROUNDS)
@@ -72,9 +75,9 @@ const register = (req, res, next) => {
         next(new BadRequestError('Некорректные данные'));
       }
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        next(new ConflictError('Такой пользователь уже существует'));
+        return next(new ConflictError('Такой пользователь уже существует'));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -85,16 +88,22 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        'some-secret-key',
+        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
         { expiresIn: '7d' },
       );
-      res.send({ token, email: user.email });
+      res.send({ token });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       }
-      next(err);
+      if (err.statusCode === 401) {
+        return next(new BadRequestError('Некорректные данные'));
+      }
+      if (err.statusCode === 400) {
+        return next(new BadRequestError('Некорректные данные'));
+      }
+      return next(err);
     });
 };
 

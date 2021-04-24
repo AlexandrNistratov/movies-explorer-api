@@ -3,12 +3,14 @@ const Movies = require('../models/movie');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
+const ConflictError = require('../errors/conflict-err');
 
+const MONGO_DUPLICATE_ERROR_CODE = 11000;
 // Сохраненные фильмы
 const getSavedMovies = (req, res, next) => {
   const owner = req.user._id;
 
-  Movies.find({ owner })
+  Movies.find({ owner }).select('-owner')
     .then((movie) => res.status(200).send(movie))
     .catch(next);
 };
@@ -16,12 +18,26 @@ const getSavedMovies = (req, res, next) => {
 // Создать фильм
 const createMovies = (req, res, next) => {
   Movies.create({ ...req.body, owner: req.user._id })
-    .then((movie) => res.status(200).send(movie))
+    .then((movie) => res.status(200).send({
+      country: movie.country,
+      director: movie.director,
+      duration: movie.duration,
+      year: movie.year,
+      image: movie.image,
+      trailer: movie.trailer,
+      thumbnail: movie.thumbnail,
+      movieId: movie.movieId,
+      nameRU: movie.nameRU,
+      nameEN: movie.nameEN,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       }
-      next(err);
+      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+        return next(new ConflictError('Такой фильм уже существует'));
+      }
+      return next(err);
     });
 };
 
@@ -42,9 +58,9 @@ const deleteMovies = (req, res, next) => {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       }
-      next(err);
+      return next(err);
     });
 };
 
