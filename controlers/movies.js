@@ -31,10 +31,12 @@ const createMovies = (req, res, next) => {
       nameEN: movie.nameEN,
     }))
     .catch((err) => {
+      console.log(err);
+      console.log(err.codeName);
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Некорректные данные'));
       }
-      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+      if (err.code === MONGO_DUPLICATE_ERROR_CODE && err.name === 'MongoError') {
         return next(new ConflictError('Такой фильм уже существует'));
       }
       return next(err);

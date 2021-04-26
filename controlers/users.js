@@ -39,10 +39,10 @@ const setProfileUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       }
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       }
       if (err.code === MONGO_DUPLICATE_ERROR_CODE && err.codeName === 'DuplicateKey') {
         return next(new ConflictError('Такой пользователь уже существует'));
@@ -69,10 +69,10 @@ const register = (req, res, next) => {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       }
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        return next(new BadRequestError('Некорректные данные'));
       }
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         return next(new ConflictError('Такой пользователь уже существует'));
@@ -95,12 +95,6 @@ const login = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new BadRequestError('Некорректные данные'));
-      }
-      if (err.statusCode === 401) {
-        return next(new BadRequestError('Некорректные данные'));
-      }
-      if (err.statusCode === 400) {
         return next(new BadRequestError('Некорректные данные'));
       }
       return next(err);

@@ -1,16 +1,7 @@
 # Backend дипломной работы
 
-[comment]: <> (### Данный проект был реализован с помощью React Create App)
-
-[comment]: <> ([Ссылка на инструмент]&#40;https://ru.reactjs.org/docs/create-a-new-react-app.html&#41;)
-
 ### Технологии
 
-[comment]: <> (* HTML)
-
-[comment]: <> (* CSS Flexbox)
-
-[comment]: <> (* React)
 * JS
 * NodeJS
 * Express
@@ -22,16 +13,13 @@
 
 * Есть возможность пройти регистрацию
 
-[comment]: <> (* Если допустите ошибку при регистрации, всплывающие окна уведомят вас об этом.)
+* Есть возможность авторизоваться в приложении  
 
-[comment]: <> (* Добавить карточки на ваш вкус, просматривать их в увеличенном размере, лайкать понравившиеся вам.)
+* Добавить свой фильм.
 
-[comment]: <> (* Удалять можете, только карточки созданные вами.)
-
-[comment]: <> (* Пытаться снять чужие лайки, не рекомендуется&#41;.)
+* Удалять можете, только свои фильмы.
 
 * Пароли зашифрованы
 ### Публичный IP адрес : 130.193.52.99
 
-[comment]: <> (### [Frontend]&#40;https://mesto.koss.nomoredomains.club/&#41;)
-### [Backend](https://api.domainname.students.nomoredomains.club)
+### [Backend](https://api.movies-attachment.nomoredomains.icu)
