@@ -24,6 +24,7 @@ const createMovies = (req, res, next) => {
       director: movie.director,
       duration: movie.duration,
       year: movie.year,
+      description: movie.description,
       image: movie.image,
       trailer: movie.trailer,
       thumbnail: movie.thumbnail,
