@@ -19,6 +19,7 @@ const getSavedMovies = (req, res, next) => {
 const createMovies = (req, res, next) => {
   Movies.create({ ...req.body, owner: req.user._id })
     .then((movie) => res.status(200).send({
+      _id: movie._id,
       country: movie.country,
       director: movie.director,
       duration: movie.duration,
@@ -31,8 +32,6 @@ const createMovies = (req, res, next) => {
       nameEN: movie.nameEN,
     }))
     .catch((err) => {
-      console.log(err);
-      console.log(err.codeName);
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Некорректные данные'));
       }
