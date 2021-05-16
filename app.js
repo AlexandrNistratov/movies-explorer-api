@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const cors = require('cors');
 
 const userRouter = require('./routes/users');
 const movieRouter = require('./routes/movies');
@@ -16,7 +17,18 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const rateLimiter = require('./middlewares/rateLimit');
 const handleError = require('./middlewares/handleError');
 
+const options = {
+  origin: [
+    'http://localhost:3001',
+    'https://movies-attachment.nomoredomains.club',
+    'https://AlexandrNistratov.github.io',
+  ],
+  credentials: true, // эта опция позволяет устанавливать куки
+};
+
 const app = express();
+
+app.use('*', cors(options));
 
 const {
   PORT = 3000,
