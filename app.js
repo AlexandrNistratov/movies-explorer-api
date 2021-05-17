@@ -19,7 +19,7 @@ const handleError = require('./middlewares/handleError');
 
 const options = {
   origin: [
-    'http://localhost:3001',
+    'http://localhost:3000',
     'https://movies-attachment.nomoredomains.club',
     'https://AlexandrNistratov.github.io',
   ],
