@@ -31,7 +31,7 @@ const app = express();
 app.use('*', cors(options));
 
 const {
-  PORT = 3000,
+  PORT = 3001,
   MONGO_URL_ADRESS = 'mongodb://localhost:27017/bitfilmsdb',
 } = process.env;
 
